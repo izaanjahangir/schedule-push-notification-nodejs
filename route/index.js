@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
+const ScheduledNotification = require("../models/ScheduledNotification");
 const schedule = require("../services/schedule");
 const User = require("../models/User");
 
@@ -39,6 +40,25 @@ router.post("/notification", async function (req, res) {
       data: {},
       message: "Success",
       success: true,
+    });
+  } catch (e) {
+    res.status(400).json({ message: e.message, success: false });
+  }
+});
+
+router.get("/notification", async function (req, res) {
+  try {
+    const list = schedule.getJobs();
+    const keys = Object.keys(list);
+
+    let schedules = await ScheduledNotification.find({});
+
+    schedules = schedules.filter((item) => keys.includes(item._id.toString()));
+
+    res.json({
+      data: { schedules },
+      status: "success",
+      message: "successfull",
     });
   } catch (e) {
     res.status(400).json({ message: e.message, success: false });

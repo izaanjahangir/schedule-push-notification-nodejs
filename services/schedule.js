@@ -6,6 +6,10 @@ const User = require("../models/User");
 const ScheduledNotification = require("../models/ScheduledNotification");
 const schedule = {};
 
+schedule.getJobs = function () {
+  return scheduleLib.scheduledJobs;
+};
+
 schedule.createSchedule = async function (data) {
   try {
     const scheduledNotification = new ScheduledNotification({
@@ -13,7 +17,7 @@ schedule.createSchedule = async function (data) {
       days: data.days,
       notification: {
         title: data.title,
-        body: data.bodyx,
+        body: data.body,
       },
     });
 
