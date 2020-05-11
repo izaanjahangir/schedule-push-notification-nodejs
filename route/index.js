@@ -65,4 +65,26 @@ router.get("/notification", async function (req, res) {
   }
 });
 
+router.delete("/notification", async function (req, res) {
+  try {
+    const jobId = req.body.id;
+    const list = schedule.getJobs();
+    const currentJob = list[jobId];
+
+    if (!currentJob) throw new Error("Job not found");
+
+    await ScheduledNotification.findByIdAndRemove(jobId);
+
+    currentJob.cancel();
+
+    res.json({
+      data: {},
+      status: "success",
+      message: "successfull",
+    });
+  } catch (e) {
+    res.status(400).json({ message: e.message, success: false });
+  }
+});
+
 module.exports = router;
